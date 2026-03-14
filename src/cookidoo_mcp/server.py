@@ -26,10 +26,74 @@ def _sanitize(value: str) -> str:
     return re.sub(r"[\x00-\x1f\x7f]", "", value)
 
 
+def _search_locale(language: str) -> str:
+    """Extract the bare language code used in the search path (e.g. 'en-US' → 'en')."""
+    return language.split("-")[0].lower()
+
+
+def _pick_image(assets: list[dict[str, Any]]) -> tuple[str | None, str | None]:
+    """Extract (thumbnail, image) from descriptiveAssets list."""
+    for asset in assets:
+        url = asset.get("square") or asset.get("landscape") or asset.get("portrait")
+        if url:
+            return url, url
+    return None, None
+
+
 def _parse_date(date_str: str | None) -> date:
     if not date_str:
         return date.today()
     return datetime.fromisoformat(date_str).date()
+
+
+# ---------------------------------------------------------------------------
+# Priority 1 — Recipe Search
+# ---------------------------------------------------------------------------
+
+@mcp.tool()
+async def search_recipes(query: str, max_results: int = 10) -> list[dict[str, Any]]:
+    """Search Cookidoo recipes by name, ingredient, or cuisine.
+
+    Args:
+        query: Free-text search term (e.g. "pasta tomato", "chicken curry", "gluten free cake").
+        max_results: Maximum number of results to return (default 10, max 50).
+    """
+    api = await _client.api()
+
+    lang = _search_locale(api.localization.language)
+    url = api.api_endpoint / f"search/{lang}"
+
+    headers = dict(api._api_headers)
+    if api._auth_data:
+        headers["Cookie"] = f"v-token={api._auth_data.access_token}"
+
+    page_size = min(max(1, max_results), 50)
+    params = {"query": query, "pageSize": str(page_size), "page": "1"}
+
+    async with api._session.get(url, headers=headers, params=params) as r:
+        r.raise_for_status()
+        data = await r.json()
+
+    raw_recipes = data.get("data") or data.get("recipes") or []
+    base_url = api.localization.url.rsplit("/foundation/", 1)[0]
+
+    results = []
+    for item in raw_recipes[:max_results]:
+        recipe_id = item.get("id", "")
+        name = _sanitize(item.get("title") or item.get("name") or "")
+        assets = item.get("descriptiveAssets") or []
+        thumbnail, image = _pick_image(assets)
+        total_time = item.get("totalTime") or item.get("total_time")
+        recipe_url = f"{base_url}/recipes/recipe/{lang}/{recipe_id}"
+        results.append({
+            "id": recipe_id,
+            "name": name,
+            "url": recipe_url,
+            "total_time_seconds": total_time,
+            "thumbnail": thumbnail,
+        })
+
+    return results
 
 
 # ---------------------------------------------------------------------------

@@ -12,6 +12,7 @@ Lets LLMs help you plan meals, manage your shopping list, and schedule recipes i
 
 | Tool | Description |
 |------|-------------|
+| `search_recipes` | Search recipes by name, ingredient, or cuisine |
 | `get_recipe_details` | Full recipe info: ingredients, timing, nutrition, categories |
 | `get_shopping_list` | Current shopping list items |
 | `add_to_shopping_list` | Add recipe ingredients to shopping list |
@@ -20,8 +21,6 @@ Lets LLMs help you plan meals, manage your shopping list, and schedule recipes i
 | `get_calendar_week` | View meal plan for a given week |
 | `add_to_calendar` | Schedule recipes for a specific day |
 | `remove_from_calendar` | Remove a recipe from a calendar day |
-
-> **Coming soon:** `search_recipes` — endpoint discovery via browser network inspection is in progress (see `scripts/discover_search_api.md`).
 
 ---
 
@@ -93,6 +92,7 @@ Replace `/path/to/cookidoo-mcp` with the absolute path to your clone.
 
 Once connected in Claude Desktop or any MCP-capable client:
 
+- *"Find me a quick pasta recipe"* → calls `search_recipes`
 - *"What's in my meal plan this week?"* → calls `get_calendar_week`
 - *"Add the ingredients for recipe r907001 to my shopping list"* → calls `add_to_shopping_list`
 - *"Clear my shopping list"* → calls `clear_shopping_list`
