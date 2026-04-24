@@ -265,6 +265,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
+    { name = "certifi" },
     { name = "cookidoo-api" },
     { name = "mcp", extra = ["cli"] },
     { name = "python-dotenv" },
@@ -273,6 +274,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "aiohttp", specifier = ">=3.13.3" },
+    { name = "certifi", specifier = ">=2026.2.25" },
     { name = "cookidoo-api", specifier = "==0.16.0" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.26.0" },
     { name = "python-dotenv", specifier = ">=1.2.2" },

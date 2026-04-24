@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import os
+import ssl
 from typing import TYPE_CHECKING
 
 import aiohttp
+import certifi
 from cookidoo_api import Cookidoo
 from cookidoo_api.types import CookidooConfig, CookidooLocalizationConfig
 
@@ -97,7 +99,9 @@ class CookidooClient:
             localization = LOCALE_MAP.get(locale_key, LOCALE_MAP["en-US"])
             cfg = CookidooConfig(localization=localization, email=email, password=password)
 
-            self._session = aiohttp.ClientSession()
+            ssl_ctx = ssl.create_default_context(cafile=certifi.where())
+            connector = aiohttp.TCPConnector(family=2, ssl=ssl_ctx)  # IPv4 + proper certs
+            self._session = aiohttp.ClientSession(connector=connector)
             self._api = Cookidoo(self._session, cfg)
             auth = await self._api.login()
             self._api.auth_data = auth

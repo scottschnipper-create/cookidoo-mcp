@@ -5,6 +5,7 @@ description = "MCP server for Cookidoo/Thermomix — find recipes, manage meal c
 requires-python = ">=3.12"
 dependencies = [
     "aiohttp>=3.13.3",
+    "certifi>=2026.2.25",
     "cookidoo-api==0.16.0",
     "mcp[cli]>=1.26.0",
     "python-dotenv>=1.2.2",
