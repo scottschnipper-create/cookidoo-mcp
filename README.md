@@ -1,5 +1,15 @@
 # cookidoo-mcp
 
+> **What:** MCP server for Cookidoo / Thermomix — search recipes, manage meal calendar and shopping list. Fork of `rupawel/cookidoo-mcp` with 13+ added tools.
+> **Where it runs:** Mac (local MCP server, plus wired into Pepe)
+> **URL:** n/a — MCP transport
+> **Status:** Active (data pipeline / agent tooling)
+> **Lives in:** `~/Developer/cookidoo-mcp/`
+
+See [REPO_INDEX.md](https://github.com/scottschnipper-create/scott-context/blob/master/REPO_INDEX.md) for the full repo map.
+
+---
+
 An unofficial MCP server for [Cookidoo](https://cookidoo.thermomix.com/) (Thermomix recipe platform).
 Lets LLMs help you plan meals, manage your shopping list, and schedule recipes in your meal calendar.
 
